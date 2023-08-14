@@ -13,8 +13,7 @@ function Book(title, author, numberOfPages, hasRead, releaseDate) {
 function displayLibrary() {
     cardGrid.textContent = "";
 
-    for (const book of myLibrary) {
-        console.log(typeof(book));
+    for (let i = 0; i < myLibrary.length; ++i) {
         // Create elements
         const cardElement = document.createElement("div");
         const titleElement = document.createElement("h2");
@@ -23,11 +22,10 @@ function displayLibrary() {
         const publishDateElement = document.createElement("h3");
 
         // Add text
-        console.log(book.title);
-        titleElement.textContent = book.title;
-        authorElement.textContent = book.author;
-        pageCountElement.textContent = book.numberOfPages + " Pages";
-        publishDateElement.textContent = "Published " + book.releaseDate;
+        titleElement.textContent = myLibrary[i].title;
+        authorElement.textContent = myLibrary[i].author;
+        pageCountElement.textContent = myLibrary[i].numberOfPages + " Pages";
+        publishDateElement.textContent = "Published " + myLibrary[i].releaseDate;
         
         // Add card elements/classes
         cardElement.classList.add("card");
@@ -37,10 +35,11 @@ function displayLibrary() {
         cardElement.appendChild(publishDateElement);
 
         // Add buttons
-        const buttonContainer = createCardButtons(book.hasRead);
+        const buttonContainer = createCardButtons(myLibrary[i].hasRead);
         cardElement.appendChild(buttonContainer);
 
         // Add card element to DOM
+        cardElement.setAttribute("data-attribute", i);
         cardGrid.appendChild(cardElement);
     }
 }
@@ -68,10 +67,30 @@ function createCardButtons(hasRead) {
     readButton.appendChild(readIcon);
     deleteButton.appendChild(deleteIcon);
 
+    readButton.addEventListener("click", (event) => { toggleRead(event); });
+    deleteButton.addEventListener("click", (event) => { deleteBook(event); });
+
     buttonContainer.appendChild(readButton);
     buttonContainer.appendChild(deleteButton);
     
     return buttonContainer;
+}
+
+function findBookIndex(buttonNode) {
+    const index = buttonNode.parentNode.parentNode.parentNode.getAttribute("data-attribute");
+    return index;
+}
+
+function deleteBook(event) {
+    const indexToDelete = findBookIndex(event.target);
+    myLibrary.splice(indexToDelete, 1);
+    displayLibrary();
+}
+
+function toggleRead(event) {
+    const indexToToggle = findBookIndex(event.target);
+    myLibrary[indexToToggle].hasRead = !myLibrary[indexToToggle].hasRead;
+    displayLibrary();
 }
 
 function addBookToLibrary(title, author, numberOfPages, hasRead, releaseDate) {
@@ -91,3 +110,6 @@ form.addEventListener("submit", (event) => {
 
     addBookToLibrary(title, author, pageCount, read, publishDate);
 });
+
+// Add starter book
+addBookToLibrary("The Hobbit", "J.R.R Tolkien", "310", true, "09-21-1937");
