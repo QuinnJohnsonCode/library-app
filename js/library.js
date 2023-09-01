@@ -2,16 +2,6 @@ let myLibrary = [];
 const form = document.getElementById("modal-form");
 const cardGrid = document.getElementById("card-grid");
 
-/*
-function Book(title, author, numberOfPages, hasRead, releaseDate) {
-    this.title = title;
-    this.author = author;
-    this.numberOfPages = numberOfPages;
-    this.hasRead = hasRead;
-    this.releaseDate = releaseDate;
-}
-*/
-
 class Book {
     title;
     author;
